@@ -1,0 +1,7 @@
+{
+  "type": "mongodb",
+  "url": "",
+  "synchronize": true,
+  "logging": true,
+  "entities": ["src/entity/**/*.ts"]
+}
