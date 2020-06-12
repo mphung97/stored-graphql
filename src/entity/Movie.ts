@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, Int, ObjectType, ID } from "type-graphql";
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from "typeorm";
 
 @ObjectType()
 @Entity()
 export class Movie extends BaseEntity {
-  @Field(() => Int)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Field(() => ID)
+  @ObjectIdColumn()
+  id: ObjectID;
 
   @Field()
   @Column()

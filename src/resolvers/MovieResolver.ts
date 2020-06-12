@@ -1,31 +1,6 @@
-import {
-  Resolver,
-  Mutation,
-  Arg,
-  Int,
-  Query,
-  InputType,
-  Field
-} from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Movie } from "../entity/Movie";
-
-@InputType()
-class MovieInput {
-  @Field()
-  title: string;
-
-  @Field(() => Int)
-  minutes: number;
-}
-
-@InputType()
-class MovieUpdateInput {
-  @Field(() => String, { nullable: true })
-  title?: string;
-
-  @Field(() => Int, { nullable: true })
-  minutes?: number;
-}
+import { MovieInput, MovieUpdateInput } from "../types/MovieTypes";
 
 @Resolver()
 export class MovieResolver {
@@ -37,21 +12,26 @@ export class MovieResolver {
 
   @Mutation(() => Boolean)
   async updateMovie(
-    @Arg("id", () => Int) id: number,
+    @Arg("id") id: string,
     @Arg("input", () => MovieUpdateInput) input: MovieUpdateInput
   ) {
-    await Movie.update({ id }, input);
+    await Movie.update(id, input);
     return true;
   }
 
   @Mutation(() => Boolean)
-  async deleteMovie(@Arg("id", () => Int) id: number) {
-    await Movie.delete({ id });
+  async deleteMovie(@Arg("id", () => String) id: string) {
+    await Movie.delete(id);
     return true;
   }
 
   @Query(() => [Movie])
   movies() {
     return Movie.find();
+  }
+
+  @Query(() => Movie)
+  movie(@Arg("id") id: string) {
+    return Movie.findOne(id);
   }
 }
