@@ -1,4 +1,24 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
+@ObjectType()
+export class User {
+  @Field()
+  id: string;
+
+  @Field({ nullable: false })
+  sid: string;
+
+  @Field({ nullable: false })
+  username: string;
+}
+
+@ObjectType()
+export class LoginResponse extends User{
+  @Field()
+  accessToken: string;
+
+  @Field()
+  refreshToken: string;
+}
 
 @InputType()
 export class UserInput {

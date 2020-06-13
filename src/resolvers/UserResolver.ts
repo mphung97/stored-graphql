@@ -1,48 +1,14 @@
+import { UserInputError } from "apollo-server-express";
 import * as bcryptjs from "bcryptjs";
 import * as shortid from "shortid";
-import {
-  Arg,
-  createUnionType,
-  Ctx,
-  Mutation,
-  Query,
-  Resolver,
-  ObjectType,
-  Field,
-  Int,
-} from "type-graphql";
-import { User } from "../entity/User";
-import { UserInput } from "../types/UserTypes";
-// import { createTokens } from "../utils/jwt";
-
-@ObjectType()
-class ErrorType {
-  @Field(() => Int)
-  error: number;
-
-  @Field()
-  message: string;
-
-  constructor(error: number, message: string) {
-    this.error = error;
-    this.message = message;
-  }
-}
-
-const LoginResultUnion = createUnionType({
-  name: "LoginResult",
-  types: () => [User, ErrorType],
-  // our implementation of detecting returned object type
-  resolveType: (value) => {
-    if ("error" in value) {
-      return ErrorType; // we can return object type class (the one with `@ObjectType()`)
-    }
-    return User;
-  },
-});
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { UserModel } from "../models/User";
+import { User, UserInput } from "../types/UserTypes";
+import { createTokens } from "../utils/jwt";
 
 @Resolver()
 export class UserResolver {
+  @Authorized()
   @Query(() => String)
   me() {
     return "me";
@@ -53,40 +19,45 @@ export class UserResolver {
     @Arg("user", () => UserInput) { username, password }: UserInput
   ) {
     const hash = bcryptjs.hashSync(password, 8);
-    const success = await User.create({
+    const success = await UserModel.create({
       username: username,
       password: hash,
       sid: shortid.generate(),
-    }).save();
+    });
     if (!success) {
       return false;
     }
     return true;
   }
 
-  @Mutation(() => LoginResultUnion)
+  @Mutation(() => User)
   async login(
     @Ctx() { res }: any,
     @Arg("user", () => UserInput) { username, password }: UserInput
   ) {
-    const user = await User.findOne({ where: { username } });
+    const user = await UserModel.findOne({ username });
     if (!user) {
-      return new ErrorType(400, "Invalid username or password");
+      throw new UserInputError("Invalid username or password");
     }
 
     const valid = await bcryptjs.compare(password, user.password);
     if (!valid) {
-      return new ErrorType(400, "Invalid username or password");
+      throw new UserInputError("Invalid username or password");
     }
+    const { _id, sid } = user;
+    const { accessToken, refreshToken } = createTokens({
+      id: _id,
+      sid,
+    });
 
-    console.log(res);
+    res.cookie("refresh-token", refreshToken);
+    res.cookie("access-token", accessToken);
 
-    // const { accessToken, refreshToken } = createTokens(user);
-
-    // res.cookie("refresh-token", refreshToken);
-    // res.cookie("access-token", accessToken);
-
-    return user;
+    return {
+      id: _id,
+      username,
+      sid,
+    };
   }
 
   @Mutation(() => Boolean)

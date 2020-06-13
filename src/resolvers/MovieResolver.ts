@@ -1,5 +1,5 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
-import { Movie } from "../entity/Movie";
+import { Movie } from "../models/Movie";
 import { MovieInput, MovieUpdateInput } from "../types/MovieTypes";
 
 @Resolver()
