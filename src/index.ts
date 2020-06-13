@@ -14,6 +14,8 @@ import { LinkResolver } from "./resolvers/LinkResolver";
 import { MovieResolver } from "./resolvers/MovieResolver";
 import { UserResolver } from "./resolvers/UserResolver";
 
+const PORT = 4001;
+
 (async () => {
   const app = express();
 
@@ -26,12 +28,12 @@ import { UserResolver } from "./resolvers/UserResolver";
     schema: await buildSchema({
       resolvers: [PingResolver, MovieResolver, LinkResolver, UserResolver],
     }),
-    context: ({ req, res }) => ({ req, res }),
+    context: ({ req, res }: any) => ({ req, res })
   });
 
   apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(4001, () => {
-    console.log("Server ready at http://localhost:4000/graphql");
+    console.log(`Server ready at http://localhost:${PORT}/graphql`);
   });
 })();

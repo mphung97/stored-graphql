@@ -1,6 +1,6 @@
 {
   "type": "mongodb",
-  "url": "",
+  "url": "mongodb://phphan:c832qBgP@ds143131.mlab.com:43131/linkbox",
   "synchronize": true,
   "logging": true,
   "entities": ["src/entity/**/*.ts"]
