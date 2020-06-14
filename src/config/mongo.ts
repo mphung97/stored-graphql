@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-import * as dotenv from "dotenv";
 import mongoose from "mongoose";
-dotenv.config();
+
 
 const MONGO_ID = process.env.MONGO_ID || "";
 const MONGO_PASS = process.env.MONGO_PASS || "";

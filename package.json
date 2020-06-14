@@ -1,6 +1,7 @@
 {
-  "name": "myapi",
+  "name": "savedapi",
   "version": "0.0.1",
+  "license": "MIT",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/cheerio": "^0.22.18",
@@ -33,6 +34,8 @@
     "type-graphql": "^0.17.5"
   },
   "scripts": {
-    "start": "nodemon --exec ts-node src/index.ts"
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "start": "ts-node dist/app.js",
+    "restart": "tsc -p ."
   }
 }

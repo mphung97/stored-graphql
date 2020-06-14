@@ -1,5 +1,5 @@
-import { Field, InputType, ObjectType, ID } from "type-graphql";
-import {Schema} from "mongoose"
+import { Schema } from "mongoose";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
 
 @ObjectType()
 export class Link{
@@ -7,7 +7,7 @@ export class Link{
   id: Schema.Types.ObjectId;
 
   @Field()
-  userId: string;
+  uid: string;
 
   @Field()
   url: string;
@@ -25,7 +25,7 @@ export class Link{
   description: string;
 
   @Field()
-  createdAt: Date;
+  createdAt: string;
 }
 
 @InputType()

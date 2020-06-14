@@ -5,20 +5,20 @@ import { UserModel } from "../models/User";
 export default async ({ req, res }: any) => {
   const accessToken = req.cookies["access-token"];
   const refreshToken = req.cookies["refresh-token"];
-  let isAuth = false;
+  let uid = null;
 
   if (!refreshToken && !accessToken) {
-    return { res, isAuth };
+    return { res, uid };
   }
 
   try {
     const decoded = verify(accessToken, ACCESS_TOKEN_SECRET) as any;
-    isAuth = !!decoded;
-    return { res, isAuth };
+    uid = decoded.uid;
+    return { res, uid };
   } catch {}
 
   if (!refreshToken) {
-    return { res, isAuth };
+    return { res, uid };
   }
 
   let data;
@@ -26,13 +26,13 @@ export default async ({ req, res }: any) => {
   try {
     data = verify(refreshToken, REFRESH_TOKEN_SECRET) as any;
   } catch {
-    return { res, isAuth };
+    return { res, uid };
   }
 
   const user = await UserModel.findById(data.uid);
   // token has been invalidated
   if (!user || user.sid !== data.sid) {
-    return { res, isAuth };
+    return { res, uid };
   }
 
   const tokens = createTokens(user);
@@ -40,6 +40,6 @@ export default async ({ req, res }: any) => {
   res.cookie("refresh-token", tokens.refreshToken, { maxAge: 604800000 });
   res.cookie("access-token", tokens.accessToken, { maxAge: 900000 });
 
-  isAuth = true;
-  return { res, isAuth };
+  uid = data.uid;
+  return { res, uid };
 };

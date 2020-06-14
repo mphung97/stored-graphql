@@ -60,8 +60,19 @@ export class UserResolver {
     };
   }
 
+  @Authorized()
   @Mutation(() => Boolean)
-  async logout() {
+  async logout(@Ctx() { uid }: any) {
+    if (!uid) {
+      return false;
+    }
+    const query = await UserModel.findByIdAndUpdate(uid, {
+      sid: shortid.generate(),
+    });
+
+    if (!query) {
+      return false;
+    }
     return true;
   }
 }
