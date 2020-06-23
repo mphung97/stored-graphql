@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import * as dotenv from "dotenv";
 import express from "express";
 import auth from "./utils/auth";
+import morgan from "morgan";
 import cors from "cors";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -31,6 +32,7 @@ const PORT = process.env.PORT || 4001;
   });
 
   const app = express();
+  app.use(morgan("tiny"));
   app.use(
     cors({
       origin: "http://localhost:8080",
