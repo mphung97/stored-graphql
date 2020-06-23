@@ -22,6 +22,7 @@
     "cheerio": "^1.0.0-rc.3",
     "class-validator": "^0.12.2",
     "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
@@ -35,7 +36,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
-    "start": "ts-node dist/app.js",
+    "start": "ts-node dist/index.js",
     "restart": "tsc -p ."
   }
 }

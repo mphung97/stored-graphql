@@ -1,5 +1,5 @@
 import { ApolloError, UserInputError } from "apollo-server-express";
-import { Arg, Ctx, Mutation, Query, Resolver, Authorized } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver, Authorized, Int } from "type-graphql";
 import { LinkModel } from "../models/Link";
 import { Link, LinkUpdateInput } from "../types/LinkTypes";
 import fetchMetaTag from "../utils/fetchMetaTag";
@@ -56,7 +56,7 @@ export class LinkResolver {
   @Authorized()
   @Query(() => [Link])
   links(
-    @Arg("page", () => Number, { defaultValue: 0, nullable: true })
+    @Arg("page", () => Int, { defaultValue: 0, nullable: true })
     page: number,
     @Ctx() { uid }: any
   ) {

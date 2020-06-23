@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import * as dotenv from "dotenv";
 import express from "express";
 import auth from "./utils/auth";
+import cors from "cors";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { LinkResolver } from "./resolvers/LinkResolver";
@@ -30,6 +31,12 @@ const PORT = process.env.PORT || 4001;
   });
 
   const app = express();
+  app.use(
+    cors({
+      origin: "http://localhost:8080",
+      credentials: true,
+    })
+  );
   app.use(cookieParser());
 
   app.get("/ping", (_, res) => {
