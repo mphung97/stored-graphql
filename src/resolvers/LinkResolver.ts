@@ -1,7 +1,7 @@
 import { ApolloError, UserInputError } from "apollo-server-express";
-import { Arg, Ctx, Mutation, Query, Resolver, Authorized, Int } from "type-graphql";
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { LinkModel } from "../models/Link";
-import { Link, LinkUpdateInput } from "../types/LinkTypes";
+import { Link, UpdateLinkInput, LinksResult } from "../types/LinkTypes";
 import fetchMetaTag from "../utils/fetchMetaTag";
 import { isUrl } from "../utils/isURL";
 
@@ -9,7 +9,7 @@ import { isUrl } from "../utils/isURL";
 export class LinkResolver {
   @Authorized()
   @Mutation(() => Link)
-  async createLink(@Arg("url", () => String) url: string, @Ctx() { uid }: any) {
+  async createLink(@Arg("url") url: string, @Ctx() { uid }: any) {
     if (!isUrl(url)) {
       throw new UserInputError("URL invalid", {
         invalidArgs: "url",
@@ -37,10 +37,14 @@ export class LinkResolver {
   @Mutation(() => Boolean)
   async updateLink(
     @Arg("id") id: string,
-    @Arg("input", () => LinkUpdateInput) input: LinkUpdateInput
+    @Arg("input") input: UpdateLinkInput
   ) {
-    await LinkModel.findByIdAndUpdate(id, input);
-    return true;
+    try {
+      await LinkModel.findByIdAndUpdate(id, input);
+      return true;
+    } catch (error) {
+      throw new ApolloError("Internal server error", "500");
+    }
   }
 
   @Authorized()
@@ -54,13 +58,25 @@ export class LinkResolver {
   }
 
   @Authorized()
-  @Query(() => [Link])
-  links(
-    @Arg("page", () => Int, { defaultValue: 0, nullable: true })
+  @Query(() => LinksResult)
+  async links(
+    @Arg("limit", { defaultValue: 1, nullable: true })
+    limit: number,
+    @Arg("page", { defaultValue: 1, nullable: true })
     page: number,
     @Ctx() { uid }: any
   ) {
-    return LinkModel.find({ uid }, null, { skip: page * 15, limit: 15 });
+    const links = await LinkModel.find({ uid }, null, {
+      skip: (page - 1) * limit,
+      limit,
+    });
+    const totalCount = await LinkModel.countDocuments();
+    const hasNextPage = (page - 1) * limit + limit < totalCount;
+    return {
+      totalCount,
+      hasNextPage,
+      links,
+    };
   }
 
   @Authorized()

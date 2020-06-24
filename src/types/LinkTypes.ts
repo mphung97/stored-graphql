@@ -1,8 +1,8 @@
 import { Schema } from "mongoose";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Field, ID, InputType, ObjectType, Int } from "type-graphql";
 
 @ObjectType()
-export class Link{
+export class Link {
   @Field(() => ID)
   id: Schema.Types.ObjectId;
 
@@ -29,19 +29,23 @@ export class Link{
 }
 
 @InputType()
-export class LinkInput {
-  @Field()
-  uid: string;
-
-  @Field()
-  url: string;
-}
-
-@InputType()
-export class LinkUpdateInput {
+export class UpdateLinkInput {
   @Field()
   title: string;
 
   @Field({ nullable: true })
   description: string;
+}
+
+@ObjectType()
+export class LinksResult {
+  @Field(() => Int)
+  totalCount: number;
+
+  @Field(() => Boolean)
+  hasNextPage: boolean;
+
+  @Field(() => [Link], { nullable: true })
+  links: Link[];
+
 }

@@ -3,7 +3,7 @@ import * as bcryptjs from "bcryptjs";
 import * as shortid from "shortid";
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { UserModel } from "../models/User";
-import { User, UserInput } from "../types/UserTypes";
+import { UserResult, UserInput } from "../types/UserTypes";
 import { createTokens } from "../utils/jwt";
 
 @Resolver()
@@ -30,7 +30,7 @@ export class UserResolver {
     return true;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserResult)
   async login(
     @Ctx() { res }: any,
     @Arg("user", () => UserInput) { username, password }: UserInput

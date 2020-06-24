@@ -1,23 +1,11 @@
 import { Field, InputType, ObjectType } from "type-graphql";
 @ObjectType()
-export class User {
+export class UserResult {
   @Field()
   id: string;
 
   @Field({ nullable: false })
-  sid: string;
-
-  @Field({ nullable: false })
   username: string;
-}
-
-@ObjectType()
-export class LoginResponse extends User{
-  @Field()
-  accessToken: string;
-
-  @Field()
-  refreshToken: string;
 }
 
 @InputType()
@@ -30,7 +18,7 @@ export class UserInput {
 }
 
 @InputType()
-export class UserUpdateInput {
+export class UpdateUserInput {
   @Field()
   title: string;
 
