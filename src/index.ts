@@ -11,9 +11,6 @@ import auth from "./utils/auth";
 import morgan from "morgan";
 import cors from "cors";
 import { ApolloServer } from "apollo-server-express";
-// import { buildSchema } from "type-graphql";
-// import { LinkResolver } from "./resolvers/LinkResolver";
-// import { UserResolver } from "./resolvers/UserResolver";
 import { typeDefs, resolvers } from "./schema";
 dotenv.config();
 
@@ -25,12 +22,6 @@ const PORT = process.env.PORT || 4001;
   const apolloServer = new ApolloServer({
     typeDefs,
     resolvers,
-    // schema: await buildSchema({
-    //   resolvers: [LinkResolver, UserResolver],
-    //   authChecker: ({ context }) => {
-    //     return !!context.uid;
-    //   },
-    // }),
     context: ({ req, res }: any) => auth({ req, res }),
   });
 
