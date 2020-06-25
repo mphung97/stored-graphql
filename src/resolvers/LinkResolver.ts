@@ -59,17 +59,17 @@ export class LinkResolver {
 
   @Authorized()
   @Query(() => LinksResult)
-  async links(
+  async allLinks(
     @Arg("limit", { defaultValue: 1, nullable: true })
     limit: number,
     @Arg("page", { defaultValue: 1, nullable: true })
     page: number,
     @Ctx() { uid }: any
   ) {
-    const links = await LinkModel.find({ uid }, null, {
-      skip: (page - 1) * limit,
-      limit,
-    });
+    const links = await LinkModel.find({ uid })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 });
     const totalCount = await LinkModel.countDocuments();
     const hasNextPage = (page - 1) * limit + limit < totalCount;
     return {
