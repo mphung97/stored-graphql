@@ -45,7 +45,7 @@ const PORT = process.env.PORT || 4001;
     res.json({ ping: "pong" });
   });
 
-  apolloServer.applyMiddleware({ app, cors: false });
+  apolloServer.applyMiddleware({ app });
 
   app.listen(4001, () => {
     console.log(`Server ready at http://localhost:${PORT}/graphql`);
