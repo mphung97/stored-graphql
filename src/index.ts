@@ -1,8 +1,8 @@
-/* 
-  The reflect-metadata package we imported at the top is a helper library
-  that extends the functionality of TypeScript decorators.
-  This package is required to use TypeORM and TypeGraphQL. 
-*/
+/*
+The reflect-metadata package we imported at the top is a helper library
+that extends the functionality of TypeScript decorators.
+This package is required to use TypeORM and TypeGraphQL.
+ */
 import "reflect-metadata";
 import cookieParser from "cookie-parser";
 import * as dotenv from "dotenv";
@@ -28,24 +28,31 @@ const PORT = process.env.PORT || 4001;
         return !!context.uid;
       },
     }),
-    context: ({ req, res }: any) => auth({ req, res }),
+    context: ({ req, res }: any) =>
+      auth({
+        req,
+        res,
+      }),
   });
 
   const app = express();
+  app.use(cookieParser());
   app.use(morgan("tiny"));
   app.use(
+    "/graphql",
     cors({
       origin: "http://localhost:8080",
       credentials: true,
     })
   );
-  app.use(cookieParser());
 
-  app.get("/ping", (_, res) => {
-    res.json({ ping: "pong" });
+  app.get("/ping", cors(), (_, res) => {
+    res.json({
+      ping: "pong",
+    });
   });
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(4001, () => {
     console.log(`Server ready at http://localhost:${PORT}/graphql`);
