@@ -36,14 +36,17 @@ const PORT = process.env.PORT || 4001;
   });
 
   const app = express();
-  app.use(cookieParser());
   app.use(morgan("tiny"));
+  app.use(cookieParser());
   app.use(
     "/graphql",
     cors({
       origin: "http://localhost:8080",
       credentials: true,
-    })
+    }),
+    (_, __, next) => {
+      return next();
+    }
   );
 
   app.get("/ping", cors(), (_, res) => {
