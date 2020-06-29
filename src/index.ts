@@ -38,16 +38,6 @@ const PORT = process.env.PORT || 4001;
   const app = express();
   app.use(morgan("tiny"));
   app.use(cookieParser());
-  app.use(
-    "/graphql",
-    cors({
-      origin: "http://localhost:8080",
-      credentials: true,
-    }),
-    (_, __, next) => {
-      return next();
-    }
-  );
 
   app.get("/ping", cors(), (_, res) => {
     res.json({
@@ -55,9 +45,15 @@ const PORT = process.env.PORT || 4001;
     });
   });
 
-  apolloServer.applyMiddleware({ app, cors: false });
+  apolloServer.applyMiddleware({
+    app,
+    cors: {
+      origin: "http://localhost:8080",
+      credentials: true,
+    },
+  });
 
-  app.listen(4001, () => {
-    console.log(`Server ready at http://localhost:${PORT}/graphql`);
+  app.listen(PORT, () => {
+    console.log(`Server ready at port: ${PORT}/graphql`);
   });
 })();

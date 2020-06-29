@@ -8,17 +8,17 @@ export default async ({ req, res }: any) => {
   let uid = null;
 
   if (!refreshToken && !accessToken) {
-    return { res, uid };
+    return { req, res, uid };
   }
 
   try {
     const decoded = verify(accessToken, ACCESS_TOKEN_SECRET) as any;
     uid = decoded.uid;
-    return { res, uid };
+    return { req, res, uid };
   } catch {}
 
   if (!refreshToken) {
-    return { res, uid };
+    return { req, res, uid };
   }
 
   let data;
@@ -26,13 +26,13 @@ export default async ({ req, res }: any) => {
   try {
     data = verify(refreshToken, REFRESH_TOKEN_SECRET) as any;
   } catch {
-    return { res, uid };
+    return { req, res, uid };
   }
 
   const user = await UserModel.findById(data.uid);
   // token has been invalidated
   if (!user || user.sid !== data.sid) {
-    return { res, uid };
+    return { req, res, uid };
   }
 
   const tokens = createTokens(user);
@@ -41,5 +41,5 @@ export default async ({ req, res }: any) => {
   res.cookie("access-token", tokens.accessToken, { maxAge: 900000 });
 
   uid = data.uid;
-  return { res, uid };
+  return { req, res, uid };
 };
