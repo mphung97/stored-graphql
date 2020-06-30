@@ -41,6 +41,6 @@
     "restart": "tsc -p .",
     "prestart": "tsc -b",
     "tsc": "tsc",
-    "postinstall": "npm run tsc"
+    "postinstall": "yarn run tsc"
   }
 }
