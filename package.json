@@ -37,7 +37,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
-    "start": "ts-node dist/index.js",
+    "start": "node dist/index.js",
     "restart": "tsc -p .",
     "build": "tsc -b"
   }
