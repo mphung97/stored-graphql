@@ -39,8 +39,6 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "ts-node dist/index.js",
     "restart": "tsc -p .",
-    "prestart": "tsc -b",
-    "tsc": "tsc",
-    "postinstall": "yarn run tsc"
+    "build": "tsc -b"
   }
 }

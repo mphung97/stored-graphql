@@ -1,0 +1,1 @@
+{"version":3,"file":"isURL.js","sourceRoot":"","sources":["../../src/utils/isURL.ts"],"names":[],"mappings":";;AAAA,SAAgB,KAAK,CAAC,GAAW;IAC/B,MAAM,MAAM,GAAG,8aAA8a,CAAC;IAC9b,IAAI,MAAM,CAAC,IAAI,CAAC,GAAG,CAAC,EAAE;QACpB,OAAO,IAAI,CAAC;KACb;SAAM;QACL,OAAO,KAAK,CAAC;KACd;AACH,CAAC;AAPD,sBAOC"}
