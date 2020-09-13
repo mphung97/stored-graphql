@@ -30,7 +30,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.18",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "reflect-metadata": "^0.1.10",
     "shortid": "^2.2.15",
     "type-graphql": "^0.17.5"
